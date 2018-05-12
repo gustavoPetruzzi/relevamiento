@@ -81,8 +81,19 @@ $colors: (
 @import "ionic.ionicons";
 
 
+$fab-size:  100px;
+
+
 // Fonts
 // --------------------------------------------------
 
 @import "roboto";
 @import "noto-sans";
+
+@font-face {
+        font-family: "Lato-Regular";
+        src: url($font-path+'/lato/Lato-Regular.ttf');
+    }
+
+   $font-family-base: "Lato-Regular";
+

@@ -1,14 +1,18 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
-</ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content>
+  <ion-row class="fila">
+    <ion-col text-center class="carta carta1" (click)="cambiar('LindasPage')" >
+      <ion-row class="espacio">
+      </ion-row>
+      <h1 class="titulo" padding margin> Cosas LINDAS del edificio </h1>
+      <img [src]="imagen" *ngIf="imagen">
+    </ion-col>
+    <ion-col text-center class="carta carta2" (click)="cambiar('FeasPage')" >
+      <ion-row class="espacio">
+      </ion-row>
+      <h1 class="titulo" padding margin> Cosas FEAS del edificio </h1>
+      <img [src]="imagen" *ngIf="imagen">
+    </ion-col>
+  </ion-row>
+
 </ion-content>

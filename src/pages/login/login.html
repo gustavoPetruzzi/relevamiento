@@ -1,0 +1,31 @@
+<!--
+  Generated template for the LoginPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content padding class="bg-style" >
+  <ion-row>
+    <ion-col text-center>
+      <img width="" height="" src="assets/imgs/trueno-icono.png">
+    </ion-col>
+  </ion-row>
+  <div>
+    <form (ngSubmit)="ingresar()">
+      <ion-item>
+        <ion-label>  <ion-icon name="person"></ion-icon> Nombre</ion-label>
+        <ion-input type="text" [(ngModel)]="nombre" name="Nombre">  <ion-icon name="person"></ion-icon></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>   <ion-icon name="key"></ion-icon> Contraseña</ion-label>
+        <ion-icon name="person"></ion-icon>
+        <ion-input type="password" [(ngModel)]="pass" name="Contrasena"></ion-input>
+      </ion-item>
+      <button ion-button round type="submit" block>Loguearse</button>
+    </form>
+  </div>
+  <button ion-button round full (click)="registrar()">Registrarse </button>
+
+  
+</ion-content>
+
