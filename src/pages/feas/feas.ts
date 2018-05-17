@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController,  } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { usuario } from '../../clases/usuario';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -26,7 +26,8 @@ export class FeasPage {
   usuario:usuario;
   image: string; // base64
   rutaArchivo:string;
-  cosas:cosas[]
+  cosas:cosas[];
+  cargo:Boolean = false;
 
   coleccionCosas:AngularFirestoreCollection<cosas>;
   ListadoDeCosasObservable:Observable<cosas[]>;
@@ -35,7 +36,8 @@ export class FeasPage {
               private camera: Camera,
               private db: AngularFirestore,
               private loadingCtrl: LoadingController,
-              private params:NavParams)
+              private params:NavParams,
+              private navCtrl: NavController)
   {
     this.usuario = this.params.get('usuario');
     this.traerCosas();
@@ -48,9 +50,13 @@ export class FeasPage {
     this.ListadoDeCosasObservable = this.coleccionCosas.valueChanges()
     this.ListadoDeCosasObservable.subscribe(cosasTraidas =>{
       this.cosas = cosasTraidas;
+      console.log(this.cosas);
     })
   }
 
+  yaCargo(){
+    this.cargo = true;
+  }
 
   // Our methods will go here...
   async captureImage() {
@@ -96,6 +102,13 @@ export class FeasPage {
           })
         })
       })
+  }
+
+  volver(){
+    this.navCtrl.pop();
+  }
+  slideChanged(){
+    this.cargo = false;
   }
    
 

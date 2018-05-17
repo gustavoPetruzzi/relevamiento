@@ -23,6 +23,9 @@ import { Camera } from '@ionic-native/camera';
 import { HttpClientModule } from '@angular/common/http'; 
 import { HttpModule } from '@angular/http';
 
+import { ImgPreloadDirective } from '../directives/img-preload/img-preload';
+
+
 export const firebaseConfig = {
   apiKey: "AIzaSyBL7LrUdPL17ifVhMLBA0Rsu0-RLn81hF4",
   authDomain: "logueo-ffa46.firebaseapp.com",

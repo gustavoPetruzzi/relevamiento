@@ -7,24 +7,29 @@
 <ion-content padding class="bg-style" >
   <ion-row>
     <ion-col text-center>
-      <img width="" height="" src="assets/imgs/trueno-icono.png">
+      <img class="imgLogin" src="assets/imgs/trueno-icono.png">
     </ion-col>
   </ion-row>
   <div>
-    <form (ngSubmit)="ingresar()">
+    <form (ngSubmit)="ingresar()" #loginForm="ngForm">
       <ion-item>
         <ion-label>  <ion-icon name="person"></ion-icon> Nombre</ion-label>
-        <ion-input type="text" [(ngModel)]="nombre" name="Nombre">  <ion-icon name="person"></ion-icon></ion-input>
+        <ion-input type="text" [(ngModel)]="nombre" name="Nombre" required>  <ion-icon name="person"></ion-icon></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>   <ion-icon name="key"></ion-icon> Contraseña</ion-label>
         <ion-icon name="person"></ion-icon>
-        <ion-input type="password" [(ngModel)]="pass" name="Contrasena"></ion-input>
+        <ion-input type="password" [(ngModel)]="pass" name="Contrasena" required></ion-input>
       </ion-item>
-      <button ion-button round type="submit" block>Loguearse</button>
+      <button ion-button round type="submit" block [disabled]="!loginForm.form.valid">Loguearse</button>
     </form>
   </div>
   <button ion-button round full (click)="registrar()">Registrarse </button>
+  <button ion-button (click)="ingresar('admin@gmail.com')">ingresar admin </button>
+  <button ion-button (click)="ingresar('invitado@gmail.com')">ingresar invitado </button>
+  <button ion-button (click)="ingresar('usuario@gmail.com')">ingresar usuario </button>
+  <button ion-button (click)="ingresar('anonimo@gmail.com')">ingresar anonimo </button>
+  <button ion-button (click)="ingresar('tester@gmail.com')">ingresar tester </button>
 
   
 </ion-content>

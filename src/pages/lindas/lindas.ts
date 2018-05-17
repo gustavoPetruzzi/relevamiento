@@ -27,7 +27,7 @@ export class LindasPage {
   usuario:usuario;
   image: string; // base64
   rutaArchivo:string;
-
+  cargo:boolean = false;
 coleccionCosas:AngularFirestoreCollection<cosas>;
 ListadoDeCosasObservable:Observable<cosas[]>;
 
@@ -35,7 +35,8 @@ ListadoDeCosasObservable:Observable<cosas[]>;
               private camera: Camera,
               private db: AngularFirestore,
               private loadingCtrl: LoadingController,
-              private params:NavParams)
+              private params:NavParams,
+              private navCtrl: NavController)
   {
     this.usuario = this.params.get('usuario');
     this.traerCosas();
@@ -52,6 +53,12 @@ ListadoDeCosasObservable:Observable<cosas[]>;
   }
   
   
+  yaCargo(){
+    this.cargo = true;
+  }
+
+
+
   // Our methods will go here...
   async captureImage() {
       const options: CameraOptions = {
@@ -97,6 +104,14 @@ ListadoDeCosasObservable:Observable<cosas[]>;
           })
         })
      })
+  }
+
+
+  volver(){
+    this.navCtrl.pop();
+  }
+  slideChanged(){
+    this.cargo = false;
   }
 
 }

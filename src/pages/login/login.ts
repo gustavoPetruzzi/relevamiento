@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController, Loading } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore,AngularFirestoreCollection } from 'angularfire2/firestore';
 import { HomePage } from '../home/home';
@@ -50,6 +50,15 @@ export class LoginPage {
     await this.angularFire.auth.signInWithEmailAndPassword(this.nombre,this.clave)
       .then(result => 
         {
+          esperador.dismiss();
+          let logueadoBien: Loading = this.esperar(this.creaFondo("Logueado correctamente", "assets/imgs/logueado.png"));
+          logueadoBien.present();
+          logueadoBien.onDidDismiss(alto =>{
+            this.navCtrl.setRoot(HomePage,{
+              usuario:this.usuario
+            })
+          });
+
           this.coleccionTipada = this.firestore.collection<usuario>('usuarios');
           // .snapshotChanges() returns a DocumentChangeAction[], which contains
           // a lot of information about "what happened" with each change. If you want to
@@ -61,43 +70,14 @@ export class LoginPage {
               return { id, ...data };
             });
           });
-          let algo =this.listadoUsuarios.map( datos =>{
-            datos.forEach(element => {
-              if(element.nombre == this.nombre){
-                this.usuario = element;
-                console.log(this.usuario);
-                esperador.dismiss();
-              }
-            });
+          this.listadoUsuarios.map( datos =>{
+            return datos.filter( usuarios => usuarios.nombre == this.nombre)
+          }).subscribe( res =>{
+            this.usuario = res[0];
+            setTimeout(function() {
+              logueadoBien.dismiss();
+            }, 2000);
           })
-          algo.toPromise().then(listo =>{
-            let logueadoBien = this.esperar(fondo);
-            logueadoBien.present();
-          })
-          let fondo = `
-          <div>
-            <ion-row text-center>
-              <img src="assets/imgs/logueado.png">
-            </ion-row>
-            <ion-row>
-              <h1> Logueado correctamente! </h1>
-            </ion-row> 
-          </div> `;
-          let logueadoBien = this.esperar(fondo);
-          logueadoBien.present();
-
-          logueadoBien.onDidDismiss(() => {
-            this.navCtrl.setRoot(HomePage, { 
-              usuario: this.usuario
-            })    
-          })
-          
-          
-          setTimeout(function() {
-            logueadoBien.dismiss();  
-          }, 1000);
-
-          
         })
 
 
@@ -113,7 +93,10 @@ export class LoginPage {
 
 
 
-  ingresar(){
+  ingresar(user?:string){
+    if(user){
+      this.nombre = user;
+    }
     switch (this.nombre) {
       case 'admin@gmail.com':
         this.clave= '111111';
@@ -139,19 +122,17 @@ export class LoginPage {
 
 
 
-  creaFondo(mensaje, error){
+  creaFondo(mensaje, imagen){
     let fondo:string;
-    if(error){
-      fondo = `
+    fondo = `
           <div>
             <ion-row text-center>
-              <img src="assets/imgs/error.png">
+              <img src="${imagen}">
             </ion-row>
             <ion-row>
               <h1> ${mensaje} </h1>
             </ion-row> 
           </div> `;
-    }
     return fondo;
 
   }
