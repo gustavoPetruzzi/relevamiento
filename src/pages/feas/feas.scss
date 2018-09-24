@@ -1,16 +1,29 @@
-page-feas {
+page-imagenes {
 
 }
-
-ion-slide img {
-    height:77vh !important;
-    width: auto !important;
+.imgSlide{
+    height: 100%;
+    width: 100%;
 }
 
-.eslay {
-    background: black
-}
-h2{
-    color: white;
+.leaves {
+    animation: spin 3s infinite;
+    //height: 50vh;
+    //width: 50vw;
+    
 }
 
+
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.ion-md-thumbs-up{
+    color: white !important;
+}
+.ion-ios-thumbs-up{
+    color: white !important;
+}

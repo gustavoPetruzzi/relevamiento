@@ -1,39 +1,33 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { usuario } from '../../clases/usuario';
-import { LindasPage } from '../lindas/lindas';
 import { FeasPage } from '../feas/feas';
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-
-  usuario:usuario;
-  imagen: string;
+  usuario:string;
   constructor(
     public navCtrl: NavController,
-    public Params: NavParams,
-    private camara: Camera
-  ) 
-  {
-
-    this.usuario = this.Params.get('usuario');
-    console.log(this.usuario);
+    public navParams: NavParams) {
+      this.usuario = this.navParams.get('usuario');
   }
 
-
-  cambiar(ruta:string){
-    if(ruta == "LindasPage"){
-      this.navCtrl.push(LindasPage,{
-        usuario: this.usuario
-      });
-    }
-    else{
-      this.navCtrl.push(FeasPage,{
-        usuario: this.usuario
-      });
+  public navegar(donde:string){
+    switch (donde) {
+      case 'lindas':
+        this.navCtrl.push(FeasPage,{
+          donde: 'lindas',
+          usuario: this.usuario,
+        });
+        break;
+      case 'feas':
+        this.navCtrl.push(FeasPage,{
+          donde: 'feas',
+          usuario: this.usuario,
+        });
+      default:
+        break;
     }
   }
 }

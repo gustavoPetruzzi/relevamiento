@@ -32,7 +32,8 @@ export const firebaseConfig = {
   databaseURL: "https://logueo-ffa46.firebaseio.com",
   projectId: 'logueo-ffa46',
   storageBucket: "logueo-ffa46.appspot.com",
-  messagingSenderId: "799164691041"
+  messagingSenderId: "799164691041",
+  automaticDataCollectionEnabled: false
 };
 @NgModule({
   declarations: [

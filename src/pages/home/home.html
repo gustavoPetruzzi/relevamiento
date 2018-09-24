@@ -1,18 +1,14 @@
-
-<ion-content>
-  <ion-row class="fila">
-    <ion-col text-center class="carta carta1" (click)="cambiar('LindasPage')" >
-      <ion-row class="espacio">
+<ion-content class="home">
+  <ion-grid>
+      <ion-row text-center>
+          <ion-col text-center (click)="navegar('lindas')" style="background-color: black">
+              <h1 style="background-color: white"> Cosas lindas del edificio</h1>
+              <img class="img"  src="assets/imgs/cosa_linda.jpg">
+          </ion-col>
+          <ion-col text-center (click)="navegar('feas')" style="background-color: red">
+              <h1 style="background-color: white"> Cosas feas del edificio</h1>
+              <img class="img"    src="assets/imgs/suelo_sucio.jpg">
+          </ion-col>
       </ion-row>
-      <h1 class="titulo" padding margin> Cosas LINDAS del edificio </h1>
-      <img [src]="imagen" *ngIf="imagen">
-    </ion-col>
-    <ion-col text-center class="carta carta2" (click)="cambiar('FeasPage')" >
-      <ion-row class="espacio">
-      </ion-row>
-      <h1 class="titulo" padding margin> Cosas FEAS del edificio </h1>
-      <img [src]="imagen" *ngIf="imagen">
-    </ion-col>
-  </ion-row>
-
+  </ion-grid>
 </ion-content>

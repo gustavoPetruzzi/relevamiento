@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController,  } from 'ionic-angular';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { usuario } from '../../clases/usuario';
-import { AngularFireDatabase } from 'angularfire2/database';
-import { AngularFirestore,AngularFirestoreCollection } from 'angularfire2/firestore';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import {Camera, CameraOptions} from '@ionic-native/camera';
+import { AngularFireDatabase, snapshotChanges } from 'angularfire2/database';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
-import { cosas } from '../../clases/cosas';
-import { Observable } from 'rxjs/Observable';
+import { Imagen } from '../../clases/imagen';
+import { usuario } from '../../clases/usuario';
+import { Observable } from 'rxjs';
+import { forEach } from '@firebase/util';
 /**
  * Generated class for the FeasPage page.
  *
@@ -23,14 +24,15 @@ export class FeasPage {
   task: AngularFireUploadTask;
 
   progress: any;  // Observable 0 to 100
-  usuario:usuario;
+  usuario:string;
   image: string; // base64
   rutaArchivo:string;
-  cosas:cosas[];
+  cosas:Imagen[];
+  donde:string;
   cargo:Boolean = false;
 
-  coleccionCosas:AngularFirestoreCollection<cosas>;
-  ListadoDeCosasObservable:Observable<cosas[]>;
+  coleccionCosas:AngularFirestoreCollection<Imagen>;
+  ListadoDeCosasObservable:Observable<Imagen[]>;
 
   constructor(public storage: AngularFireStorage,
               private camera: Camera,
@@ -40,17 +42,31 @@ export class FeasPage {
               private navCtrl: NavController)
   {
     this.usuario = this.params.get('usuario');
-    this.traerCosas();
+    this.donde = this.params.get('donde');
+    this.coleccionCosas = this.db.collection<any>(this.donde);
+    this.ListadoDeCosasObservable = this.coleccionCosas.snapshotChanges().map(actions =>{
+      return actions.map(a =>{
+        const data = a.payload.doc.data() as Imagen;
+        const id = a.payload.doc.id;
+        return {id, ...data};
+      })
+    });
+    this.ListadoDeCosasObservable.subscribe( res =>{
+      this.cosas = res;
+      this.cargo = true;
+    });
+    
   }
 
 
 
   traerCosas(){
-    this.coleccionCosas = this.db.collection<cosas>('feas');
+    this.coleccionCosas = this.db.collection<Imagen>('feas');
     this.ListadoDeCosasObservable = this.coleccionCosas.valueChanges()
     this.ListadoDeCosasObservable.subscribe(cosasTraidas =>{
+      
       this.cosas = cosasTraidas;
-      console.log(this.cosas);
+      this.cargo = true;
     })
   }
 
@@ -73,7 +89,7 @@ export class FeasPage {
   }
   createUploadTask(file: string) {
 
-    this.rutaArchivo = `feas/${this.usuario.nombre}_${ new Date().getTime() }.jpg`;
+    this.rutaArchivo = `${this.donde}/${this.usuario}_${ new Date().getTime() }.jpg`;
 
     this.image = 'data:image/jpg;base64,' + file;
     this.task = this.storage.ref(this.rutaArchivo).putString(this.image, 'data_url');
@@ -93,9 +109,11 @@ export class FeasPage {
       .then(res =>{
         this.storage.ref(this.rutaArchivo).getDownloadURL().toPromise()
         .then(urlImagen =>{
-          this.db.collection('feas').add({
-            nombreUsuario: this.usuario.nombre,
-            url: urlImagen
+          this.db.collection(this.donde).add({
+            nombreUsuario: this.usuario,
+            url: urlImagen,
+            votos: 0,
+            votantes: [],
           })
           .then(res =>{
             loading.dismiss();
@@ -104,12 +122,34 @@ export class FeasPage {
       })
   }
 
-  volver(){
-    this.navCtrl.pop();
+  public votar(id:string){
+    let yaVoto = false;
+    this.cosas.forEach(element => {
+      if(this.estaEnArray(this.usuario, element.votantes)){
+        yaVoto = true;
+      }
+    });
+    if(!yaVoto){
+      let imagenVotada:Imagen[];
+      imagenVotada = this.cosas.filter(imagenes => imagenes.id = id);
+      imagenVotada[0].votos = imagenVotada[0].votos + 1;
+      imagenVotada[0].votantes.push(this.usuario);
+      this.db.collection<Imagen>(this.donde).doc(id).update(imagenVotada[0])
+      .then(res =>{
+        console.log("Votado!");
+      })
+      .catch(res =>{
+        console.log("error");
+        imagenVotada[0].votos = imagenVotada[0].votos -1;
+      })
+    }
+    else if(yaVoto){
+      console.log('usted ya ha votado!');
+    }
   }
-  slideChanged(){
-    this.cargo = false;
+
+  private estaEnArray(value:any, array:any[]){
+    return array.indexOf(value) > -1;
   }
-   
 
 }

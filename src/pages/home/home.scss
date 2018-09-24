@@ -1,29 +1,38 @@
 page-home {
-
-}
-.fila{
-    height: 100%;
+    @media all and (orientation:portrait){
+        ion-row {
+            flex: 1;
+            width: 100%;
+            flex-direction: column;
+            
+            //flex-grow: 3;
+        }        
+    }
     
+    @media all and (orientation:landscape){
+        ion-row {
+            flex: 1;
+            width: 100%;
+            flex-direction: row;
+            
+            //flex-grow: 3;
+        }
+    }
+}
+.home{
+    ion-grid {
+        padding: 0;
+        
+        height: 100%;
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
 }
 
-.titulo{
-    font-size: 6vw;
-    color: white;
-}
 
 
-.espacio{
-    height: 25%
-}
-
-
-
-.carta1 {    
-    background-color: red;
-    box-shadow: -5px 10px black;
-}
-
-.carta2{
-    background-color:#3d9326;
-    box-shadow: 5px 10px black;
+img{
+    height: 70% !important;
+    width: 70% !important;
 }

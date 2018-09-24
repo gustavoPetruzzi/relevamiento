@@ -1,8 +1,22 @@
 page-login {
-
+    .rounded {
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 10px;
+    margin-bottom: 10px;  
+    }
 }
 
+.login{
+    background-image: url('../../assets/imgs/fondo.jpg');
+}
+.loginForm{
+    
+}
 .imgLogin{
-    height:60vh !important;
+    height:50vh !important;
     width: auto !important;
+    -ms-transform: rotate(-20deg); /* IE 9 */
+    -webkit-transform: rotate(-20deg); /* Safari 3-8 */
+    transform: rotate(-20deg);
 }
