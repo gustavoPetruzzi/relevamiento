@@ -11,8 +11,8 @@
         <ion-slides>
             <ion-slide *ngFor="let imagen of cosas">
               <!--<h3 ion-text color="light"> {{imagen.nombreUsuario}}</h3>-->
-              <h3 ion-text color="light">{{imagen.nombreUsuario.nombre}}</h3>
-              <img class="imgSlide" (press)="votar(imagen.id)" [src]="imagen.url">
+              <h3 ion-text color="light">{{imagen.nombreUsuario}}</h3>
+              <img-loader class="imgSlide" spinner="true" useImg  (press)="votar(imagen.id)" [src]="imagen.url"></img-loader>
               <br>
               <ion-icon  name="thumbs-up"></ion-icon>
               <ion-badge> {{imagen.votos}}</ion-badge>                   

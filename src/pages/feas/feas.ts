@@ -8,6 +8,7 @@ import { Imagen } from '../../clases/imagen';
 import { usuario } from '../../clases/usuario';
 import { Observable } from 'rxjs';
 import { forEach } from '@firebase/util';
+import { dateDataSortValue } from 'ionic-angular/umd/util/datetime-util';
 /**
  * Generated class for the FeasPage page.
  *
@@ -52,8 +53,17 @@ export class FeasPage {
       })
     });
     this.ListadoDeCosasObservable.subscribe( res =>{
-      this.cosas = res;
+      let ordenados = res.sort((x,y)=>{
+        if(y.fecha > x.fecha){
+          return 1;
+        }
+        if(y.fecha < x.fecha){
+          return 0;
+        }
+        return 1;
+      });
       this.cargo = true;
+      this.cosas = ordenados;
     });
     
   }
@@ -64,8 +74,19 @@ export class FeasPage {
     this.coleccionCosas = this.db.collection<Imagen>('feas');
     this.ListadoDeCosasObservable = this.coleccionCosas.valueChanges()
     this.ListadoDeCosasObservable.subscribe(cosasTraidas =>{
-      
-      this.cosas = cosasTraidas;
+      let ordenados = cosasTraidas.sort((x, y)=>{
+        if(x.fecha > y.fecha){
+          return 1;
+        }
+        if(x.fecha < y.fecha ){
+          return 0;
+        }
+        return -1;
+      })
+      this.cosas = ordenados;
+      this.cosas.forEach(element => {
+        element.fecha;
+      });
       this.cargo = true;
     })
   }
@@ -94,7 +115,7 @@ export class FeasPage {
     this.image = 'data:image/jpg;base64,' + file;
     this.task = this.storage.ref(this.rutaArchivo).putString(this.image, 'data_url');
 
-    return this.task
+    return this.task;
   } 
 
   async uploadHandler() {
@@ -114,6 +135,7 @@ export class FeasPage {
             url: urlImagen,
             votos: 0,
             votantes: [],
+            fecha: new Date().getTime(),
           })
           .then(res =>{
             loading.dismiss();

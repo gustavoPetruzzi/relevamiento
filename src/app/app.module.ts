@@ -23,8 +23,8 @@ import { Camera } from '@ionic-native/camera';
 import { HttpClientModule } from '@angular/common/http'; 
 import { HttpModule } from '@angular/http';
 
-import { ImgPreloadDirective } from '../directives/img-preload/img-preload';
-
+//import { ImgPreloadDirective } from '../directives/img-preload/img-preload';
+import { IonicImageLoader } from 'ionic-image-loader';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyBL7LrUdPL17ifVhMLBA0Rsu0-RLn81hF4",
@@ -53,6 +53,7 @@ export const firebaseConfig = {
     AngularFireStorageModule,
     HttpClientModule,
     HttpModule,
+    IonicImageLoader.forRoot(),
     
 
   ],

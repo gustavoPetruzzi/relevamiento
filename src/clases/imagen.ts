@@ -4,4 +4,5 @@ export class Imagen{
     url:string;
     votos:number;
     votantes:string[];
+    fecha: Number;
 }
