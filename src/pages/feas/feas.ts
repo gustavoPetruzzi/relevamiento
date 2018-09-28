@@ -6,6 +6,7 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
 import { Imagen } from '../../clases/imagen';
 import { usuario } from '../../clases/usuario';
+import { base64 } from '../../clases/base64';
 import { Observable } from 'rxjs';
 import { forEach } from '@firebase/util';
 import { dateDataSortValue } from 'ionic-angular/umd/util/datetime-util';
@@ -23,7 +24,7 @@ import { dateDataSortValue } from 'ionic-angular/umd/util/datetime-util';
 })
 export class FeasPage {
   task: AngularFireUploadTask;
-
+  fotos:any =[];
   progress: any;  // Observable 0 to 100
   usuario:string;
   image: string; // base64
@@ -96,7 +97,7 @@ export class FeasPage {
   }
 
   // Our methods will go here...
-  async captureImage() {
+  public captureImage() {
       const options: CameraOptions = {
         quality: 100,
         destinationType: this.camera.DestinationType.DATA_URL,
@@ -106,27 +107,63 @@ export class FeasPage {
         sourceType: this.camera.PictureSourceType.CAMERA
       }
 
-      return await this.camera.getPicture(options)
+      this.camera.getPicture(options)
+      .then(data =>{
+        this.image = 'data:image/jpg;base64,' + data;
+        this.fotos.push(this.image);
+        //this.fotos.reverse();
+      })
+      
   }
   createUploadTask(file: string) {
 
     this.rutaArchivo = `${this.donde}/${this.usuario}_${ new Date().getTime() }.jpg`;
-
     this.image = 'data:image/jpg;base64,' + file;
-    this.task = this.storage.ref(this.rutaArchivo).putString(this.image, 'data_url');
+    
+    this.task = this.storage.ref(this.rutaArchivo).putString(file, 'data_url');
 
     return this.task;
   } 
 
-  async uploadHandler() {
-     const base64 = await this.captureImage();
-     
-     let loading = this.loadingCtrl.create({
-      content: 'Cargando foto...'
-     });
+     uploadHandler() {
+     //const base64 = await this.captureImage();
+     /*
+     if(this.fotos.length > 0){
+       this.fotos.forEach(element => {
+        let fotos: number = this.fotos.length;
+        let loading = this.loadingCtrl.create({
+          content: `Cargando ${fotos} foto(s)...`
+        });
 
-     loading.present();
-     this.createUploadTask(base64)
+        loading.present();
+
+        this.createUploadTask(element)
+        .then(res =>{
+          this.storage.ref(this.rutaArchivo).getDownloadURL().toPromise()
+          .then(urlImagen =>{
+            this.db.collection(this.donde).add({
+              nombreUsuario: this.usuario,
+              url: urlImagen,
+              votos: 0,
+              votantes: [],
+              fecha: new Date().getTime(),
+            })
+            .then(res =>{
+              loading.dismiss();
+              fotos = fotos - 1;
+            })
+          })
+        })
+        this.fotos = [];
+       });
+     }
+     */
+    if(this.fotos.length > 0){
+      let loading = this.loadingCtrl.create({
+        content: `Cargando ${this.fotos.length} foto(s)...`
+      });
+      loading.present();
+      this.createUploadTask(this.fotos[this.fotos.length -1])
       .then(res =>{
         this.storage.ref(this.rutaArchivo).getDownloadURL().toPromise()
         .then(urlImagen =>{
@@ -138,10 +175,13 @@ export class FeasPage {
             fecha: new Date().getTime(),
           })
           .then(res =>{
+            this.fotos.pop();
             loading.dismiss();
+            this.uploadHandler();
           })
         })
       })
+    }
   }
 
   public votar(id:string){
